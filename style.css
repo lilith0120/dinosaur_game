@@ -1,0 +1,21 @@
+* {
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+#root {
+    position: relative;
+    width: 100%;
+}
+
+#canvas {
+    display: block;
+    height: 200px;
+    width: 1200px;
+    margin: 100px auto;
+}
+
+#horizon {
+    display: none;
+}

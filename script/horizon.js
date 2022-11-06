@@ -1,38 +1,8 @@
-window.onload = () => {
-    let canvas = document.getElementById("canvas");
-    let horizon = new HorizonLine(canvas, spriteDefinition.HORIZON);
-    let startTime = 0;
-    (function draw(time = 0) {
-        horizon.ctx.clearRect(0, 0, RunnerDimensions.WIDTH, RunnerDimensions.HEIGHT);
-        horizon.update(time - startTime, 2);
-        startTime = time;
-        window.requestAnimationFrame(draw);
-    }());
-};
-
 const FPS = 60;
-const RunnerDimensions = {
-    WIDTH: 800,
-    HEIGHT: 200,
-};
-
-const Dimensions = {
-    WIDTH: 800,
-    HEIGHT: 20,
-    YPOS: 127 // 在canvas的位置
-};
-
-// 地面初始坐标
-let spriteDefinition = {
-    HORIZON: {
-        x: 0,
-        y: 0,
-    }
-};
 
 // canvas: 绘制画布,
 // spritePos: 地面坐标
-class HorizonLine {
+export class HorizonLine {
     spritePos
     canvas
     ctx
@@ -42,11 +12,11 @@ class HorizonLine {
     bumpThreshold
     sourceXPos
 
-    constructor(canvas, spritePos) {
+    constructor(canvas, spritePos, dimensions) {
         this.canvas = canvas;
         this.spritePos = spritePos;
         this.ctx = canvas.getContext("2d");
-        this.dimensions = Dimensions;
+        this.dimensions = dimensions;
         this.xPos = [];
         this.yPos = 0;
         this.sourceXPos = [this.spritePos.x, this.spritePos.x + this.dimensions.WIDTH];

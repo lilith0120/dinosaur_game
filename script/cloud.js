@@ -3,7 +3,7 @@ const cloudConfig = {
     WIDTH: 50,
     MAX_GAP: 300,
     MIN_GAP: 100,
-    MAX_HEIGHT: 30,
+    MAX_HEIGHT: 20,
     MIN_HEIGHT: 70,
     MAX_NUM: 7,
     CLOUD_RATE: 0.5,

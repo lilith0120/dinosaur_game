@@ -73,7 +73,7 @@ export class Night {
         } else if (this.invertTime) {
             this.invertTime += deltaTime;
         } else {
-            this.invertTrigger = !(gameScore % 700);
+            this.invertTrigger = !(gameScore % 1000);
             if (this.invertTrigger && this.invertTime === 0) {
                 this.invertTime += deltaTime;
                 this.inverted = document.body.classList.toggle('inverted', this.invertTrigger);
@@ -89,7 +89,7 @@ export class Night {
             }
         }
 
-        if (actived && (this.opacity < 1 || this.opacity === 0)) {
+        if (actived && this.opacity < 1) {
             this.opacity += nightConfig.FADE_SPEED;
         } else if (this.opacity > 0) {
             this.opacity -= nightConfig.FADE_SPEED;
@@ -129,6 +129,7 @@ export class Night {
         let starSourceX = starDefinition.x;
 
         this.ctx.save();
+        this.ctx.globalAlpha = this.opacity;
 
         if (this.drawStars) {
             for (let i = 0; i < nightConfig.STAR_NUM; i++) {
@@ -148,6 +149,7 @@ export class Night {
             moonSourceWidth, nightConfig.HEIGHT,
         );
 
+        this.ctx.globalAlpha = 1;
         this.ctx.restore();
     }
 }

@@ -50,7 +50,7 @@ export class HorizonLine {
 
     // 获取随机地板
     getRandomSource() {
-        return Math.random() > this.bumpThreshold ? this.dimensions.WIDTH: 0;
+        return Math.random() > this.bumpThreshold ? this.dimensions.WIDTH : 0;
     }
 
     // 更新x轴地板
@@ -74,7 +74,7 @@ export class HorizonLine {
 
     // 更新地板
     update(deltaTime, speed) {
-        let increment = Math.floor(speed * (FPS / 1000) * deltaTime);
+        let increment = Math.floor(speed * (FPS / 1000) * Math.round(deltaTime));
 
         // 交换两块地板
         if (this.xPos[0] <= 0) {

@@ -93,12 +93,21 @@ window.onload = () => {
             if(!dinosaur.isJump) {
                 dinosaur.startJump();
             }
+        } else if (keyCode.DUCK.includes(e.keyCode)) {
+            if (dinosaur.isJump) {
+                dinosaur.setSpeedDown();
+            } else if (!dinosaur.isJump && !dinosaur.isDuck) {
+                dinosaur.setDuck(true);
+            }
         }
     }
 
     function onKeyUp(e) {
         if (keyCode.JUMP.includes(e.keyCode)) {
             dinosaur.endJump();
+        } else if (keyCode.DUCK.includes(e.keyCode)) {
+            dinosaur.speedDown = false;
+            dinosaur.setDuck(false);
         }
     }
 };

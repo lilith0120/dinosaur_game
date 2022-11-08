@@ -7,7 +7,8 @@ const dinosaurConfig = {
     MIN_JUMP_HEIGHT: 30,
     BOTTOM_DISTANCE: 10,
     JUMP_SPEED: -10,
-    DROP_SPPED: -5,
+    DROP_SPEED: -5,
+    DROP_DOWN_SPEED: 3,
     GRAVITY: 0.6,
 };
 
@@ -59,6 +60,7 @@ export class Dinosaur {
     reachMinJumpHeight
     isDrop
     jumpCount
+    speedDown
 
     constructor(canvas, spritePos, containerHeight) {
         this.canvas = canvas;
@@ -84,6 +86,7 @@ export class Dinosaur {
         this.reachMinJumpHeight = false;
         this.isDrop = false;
         this.jumpCount = 0;
+        this.speedDown = false;
 
         this.init();
     };
@@ -173,14 +176,19 @@ export class Dinosaur {
     updateJump(deltaTime) {
         let curFamesRate = dinosaurStatus[this.status].frames_rate;
         let curFames = deltaTime / curFamesRate;
-        this.yPos += Math.round(this.jumpSpeed * curFames);
         this.jumpSpeed += dinosaurConfig.GRAVITY * curFames;
 
-        if (this.yPos <= this.minJumpHeight) {
+        if (this.speedDown) {
+            this.yPos += Math.round(this.jumpSpeed * curFames * dinosaurConfig.DROP_DOWN_SPEED);
+        } else {
+            this.yPos += Math.round(this.jumpSpeed * curFames);
+        }
+
+        if (this.yPos <= this.minJumpHeight || this.speedDown) {
             this.reachMinJumpHeight = true;
         }
 
-        if (this.yPos <= dinosaurConfig.MAX_JUMP_HEIGHT) {
+        if (this.yPos <= dinosaurConfig.MAX_JUMP_HEIGHT || this.speedDown) {
             this.endJump();
         }
 
@@ -193,8 +201,8 @@ export class Dinosaur {
     };
 
     endJump() {
-        if (this.reachMinJumpHeight && this.jumpSpeed < dinosaurConfig.DROP_SPPED) {
-            this.jumpSpeed = dinosaurConfig.DROP_SPPED;
+        if (this.reachMinJumpHeight && this.jumpSpeed < dinosaurConfig.DROP_SPEED) {
+            this.jumpSpeed = dinosaurConfig.DROP_SPEED;
         }
     };
 
@@ -204,5 +212,21 @@ export class Dinosaur {
         this.jumpSpeed = 0;
         this.update(0, "RUN");
         this.jumpCount = 0;
+        this.speedDown = false;
+    };
+
+    setSpeedDown() {
+        this.speedDown = true;
+        this.jumpSpeed = 1;
+    };
+
+    setDuck(isDuck) {
+        if (isDuck && this.status !== "DUCK") {
+            this.update(0, "DUCK");
+            this.isDuck = true;
+        } else if (this.status === "DUCK") {
+            this.update(0, "RUN");
+            this.isDuck = false
+        }
     };
 }

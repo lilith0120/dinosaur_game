@@ -48,7 +48,7 @@ export class Cloud {
             this.spritePos.x, this.spritePos.y,
             cloudConfig.WIDTH * 2, cloudConfig.HEIGHT * 2,
             this.xPos, this.yPos,
-            cloudConfig.WIDTH, cloudConfig.HEIGHT,
+            cloudConfig.WIDTH / 2, cloudConfig.HEIGHT,
         );
         this.ctx.restore();
     };

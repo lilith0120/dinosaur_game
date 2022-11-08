@@ -137,7 +137,7 @@ export class Night {
                     starSourceX, this.stars[i].sourceY,
                     nightConfig.STAR_WEIGHT, nightConfig.STAR_WEIGHT,
                     Math.round(this.stars[i].x), this.stars[i].y,
-                    nightConfig.STAR_WEIGHT, nightConfig.STAR_WEIGHT,
+                    nightConfig.STAR_WEIGHT / 2, nightConfig.STAR_WEIGHT,
                 );
             }
         }
@@ -146,7 +146,7 @@ export class Night {
             moonSourceX, this.spritePos.y,
             moonSourceWidth, nightConfig.HEIGHT,
             Math.round(this.xPos), this.yPos,
-            moonSourceWidth, nightConfig.HEIGHT,
+            moonSourceWidth / 2, nightConfig.HEIGHT,
         );
 
         this.ctx.globalAlpha = 1;

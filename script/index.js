@@ -2,6 +2,7 @@ import { HorizonLine } from "./horizon.js";
 import { Cloud } from './cloud.js';
 import { Night } from './night.js';
 import { Obstacle } from './obstacle.js';
+import { Dinosaur } from './dinosaur.js';
 
 // 地面初始坐标
 const spriteDefinition = {
@@ -21,11 +22,15 @@ const spriteDefinition = {
         x: 228,
         y: 2,
     },
+    DINOSAUR: {
+        x: 848,
+        y: 2,
+    },
 };
 
 const Dimensions = {
     WIDTH: 800,
-    HEIGHT: 20,
+    HEIGHT: 150,
     YPOS: 127 // 在canvas的位置
 };
 
@@ -38,10 +43,13 @@ const canvasDefinition = {
 window.onload = () => {
     let canvas = document.getElementById("canvas");
     let ctx = canvas.getContext("2d");
+
     let horizon = new HorizonLine(canvas, spriteDefinition.HORIZON, Dimensions);
     let cloud = new Cloud(canvas, spriteDefinition.CLOUD, Dimensions.WIDTH);
     let night = new Night(canvas, spriteDefinition.NIGHT, Dimensions.WIDTH);
-    let obstacle = new Obstacle(canvas, spriteDefinition.OBSTACLE, Dimensions.WIDTH, 0.5, 1, 0, undefined)
+    let obstacle = new Obstacle(canvas, spriteDefinition.OBSTACLE, Dimensions.WIDTH, 0.5, 1, 0, undefined);
+    let dinosaur = new Dinosaur(canvas, spriteDefinition.DINOSAUR, Dimensions.HEIGHT);
+
     let startTime = 0;
     let gameScore = 0;
     let speed = 2.5;

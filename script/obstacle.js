@@ -129,7 +129,7 @@ export class Obstacle {
             sourceX, this.spritePos.y,
             sourceWidth, sourceHeight,
             this.xPos, this.yPos,
-            sourceWidth, sourceHeight,
+            sourceWidth / 2, sourceHeight,
         );
     };
 

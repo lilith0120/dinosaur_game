@@ -40,6 +40,12 @@ const canvasDefinition = {
     HEIGHT: 200,
 };
 
+const keyCode = {
+    JUMP: [32, 38],
+    DUCK: [40],
+    RESTART: [13],
+};
+
 window.onload = () => {
     let canvas = document.getElementById("canvas");
     let ctx = canvas.getContext("2d");
@@ -66,8 +72,33 @@ window.onload = () => {
         cloud.updateCloud(0.2);
         night.invert(deltaTime, gameScore);
         obstacle.updateObstacle(deltaTime, speed);
+        dinosaur.update(deltaTime);
+
+        if (dinosaur.isJump) {
+            dinosaur.updateJump(deltaTime);
+        }
 
         startTime = time;
         window.requestAnimationFrame(draw);
     }());
+
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("mousedown", onKeyDown);
+
+    document.addEventListener("keyup", onKeyUp);
+    document.addEventListener("mouseup", onKeyUp);
+
+    function onKeyDown(e) {
+        if (keyCode.JUMP.includes(e.keyCode)) {
+            if(!dinosaur.isJump) {
+                dinosaur.startJump();
+            }
+        }
+    }
+
+    function onKeyUp(e) {
+        if (keyCode.JUMP.includes(e.keyCode)) {
+            dinosaur.endJump();
+        }
+    }
 };

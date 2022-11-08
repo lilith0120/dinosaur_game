@@ -3,8 +3,12 @@ const dinosaurConfig = {
     WIDTH: 44,
     DUCK_WIDTH: 59,
     HEIGHT: 47,
+    MAX_JUMP_HEIGHT: 30,
     MIN_JUMP_HEIGHT: 30,
     BOTTOM_DISTANCE: 10,
+    JUMP_SPEED: -10,
+    DROP_SPPED: -5,
+    GRAVITY: 0.6,
 };
 
 const dinosaurStatus = {
@@ -51,6 +55,7 @@ export class Dinosaur {
     status
     isJump
     isDuck
+    minJumpHeight
     reachMinJumpHeight
     isDrop
     jumpCount
@@ -86,7 +91,7 @@ export class Dinosaur {
     init() {
         this.groundYPos = this.containerHeight - dinosaurConfig.HEIGHT - dinosaurConfig.BOTTOM_DISTANCE;
         this.yPos = this.groundYPos;
-        this.reachMinJumpHeight = this.groundYPos - dinosaurConfig.MIN_JUMP_HEIGHT;
+        this.minJumpHeight = this.groundYPos - dinosaurConfig.MIN_JUMP_HEIGHT;
 
         this.draw(0, 0);
         this.update(0, "WAIT");
@@ -111,6 +116,7 @@ export class Dinosaur {
 
     update(deltaTime, curStatus) {
         this.time += deltaTime;
+
         if (curStatus) {
             this.status = curStatus;
             this.currentAniFrames = 0;
@@ -130,6 +136,8 @@ export class Dinosaur {
 
         if (this.status === "WAIT") {
             this.blink(this.getTimeStamp());
+        } else {
+            this.draw(this.animationFrames[this.currentAniFrames], 0);
         }
     };
 
@@ -151,5 +159,50 @@ export class Dinosaur {
                 this.aniStartTime = time;
             }
         }
+    };
+
+    startJump() {
+        if (!this.isJump) {
+            this.isJump = true;
+            this.update(0, "JUMP");
+            this.jumpSpeed = dinosaurConfig.JUMP_SPEED;
+            this.reachMinJumpHeight = false;
+        }
+    };
+
+    updateJump(deltaTime) {
+        let curFamesRate = dinosaurStatus[this.status].frames_rate;
+        let curFames = deltaTime / curFamesRate;
+        this.yPos += Math.round(this.jumpSpeed * curFames);
+        this.jumpSpeed += dinosaurConfig.GRAVITY * curFames;
+
+        if (this.yPos <= this.minJumpHeight) {
+            this.reachMinJumpHeight = true;
+        }
+
+        if (this.yPos <= dinosaurConfig.MAX_JUMP_HEIGHT) {
+            this.endJump();
+        }
+
+        if (this.yPos >= this.groundYPos) {
+            this.reset();
+            this.jumpCount++;
+        }
+
+        this.update(deltaTime);
+    };
+
+    endJump() {
+        if (this.reachMinJumpHeight && this.jumpSpeed < dinosaurConfig.DROP_SPPED) {
+            this.jumpSpeed = dinosaurConfig.DROP_SPPED;
+        }
+    };
+
+    reset() {
+        this.isJump = false;
+        this.yPos = this.groundYPos;
+        this.jumpSpeed = 0;
+        this.update(0, "RUN");
+        this.jumpCount = 0;
     };
 }

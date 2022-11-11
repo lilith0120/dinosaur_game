@@ -1,3 +1,5 @@
+import { CollisionBox } from './collision-box.js';
+
 const obstacleType = [
     {
         type: 'SMALL_CACTUS',
@@ -7,6 +9,11 @@ const obstacleType = [
         repeat_speed: 2,
         speed: 0,
         gap: 120,
+        collisionBoxes: [
+            new CollisionBox(0, 7, 10, 27),
+            new CollisionBox(3, 0, 15, 34),
+            new CollisionBox(5, 4, 7, 14),
+        ],
     },
     {
         type: 'LARGE_CACTUS',
@@ -16,6 +23,11 @@ const obstacleType = [
         repeat_speed: 5,
         speed: 0,
         gap: 120,
+        collisionBoxes: [
+            new CollisionBox(0, 12, 15, 38),
+            new CollisionBox(4, 0, 15, 49),
+            new CollisionBox(8, 10, 20, 38),
+        ],
     },
     {
         type: 'PTEROSAUR',
@@ -28,6 +40,13 @@ const obstacleType = [
         frames_num: 2,
         frames_rate: 1000 / 6,
         speed_offset: 0.8,
+        collisionBoxes: [
+            new CollisionBox(7, 15, 60, 5),
+            new CollisionBox(9, 21, 100, 6),
+            new CollisionBox(1, 14, 20, 3),
+            new CollisionBox(3, 10, 20, 7),
+            new CollisionBox(5, 8, 30, 9),
+        ],
     },
 ];
 
@@ -66,6 +85,8 @@ export class Obstacle {
     yPos
     width
     speedOffset
+    collisionBoxes
+    obstaclesLine
 
     constructor(canvas, spritePos, containerWidth, gapDistance, speed, offsetX, type) {
         this.canvas = canvas;
@@ -82,6 +103,8 @@ export class Obstacle {
         this.width = 0;
         this.gap = 0;
         this.speedOffset = 0;
+        this.collisionBoxes = [];
+        this.obstaclesLine = obstaclesLine;
 
         this.currentFrames = 0;
         this.time = 0;
@@ -108,6 +131,12 @@ export class Obstacle {
         }
 
         this.draw();
+        this.cloneCollisionBoxs();
+
+        if (this.size > 1) {
+            this.collisionBoxes[1].width = this.width - this.collisionBoxes[0].width - this.collisionBoxes[2].width;
+            this.collisionBoxes[2].xPos = (this.width - this.collisionBoxes[2].width) / 2;
+        }
 
         if (this.type.speed_offset) {
             this.speedOffset = Math.random() > 0.5 ? this.type.speed_offset : -this.type.speed_offset;
@@ -208,5 +237,13 @@ export class Obstacle {
 
     isVisible() {
         return this.xPos + this.width > 0;
+    }
+
+    cloneCollisionBoxs() {
+        let boxs = this.type.collisionBoxes;
+        for (let i = 0; i < boxs.length; i++) {
+            let box = new CollisionBox(boxs[i].xPos, boxs[i].yPos, boxs[i].width, boxs[i].height);
+            this.collisionBoxes.push(box);
+        }
     }
 }

@@ -3,6 +3,7 @@ import { Cloud } from './cloud.js';
 import { Night } from './night.js';
 import { Obstacle } from './obstacle.js';
 import { Dinosaur } from './dinosaur.js';
+import { checkCollision } from './collision-box.js';
 
 // 地面初始坐标
 const spriteDefinition = {
@@ -78,6 +79,8 @@ window.onload = () => {
             dinosaur.updateJump(deltaTime);
         }
 
+        checkCollision(dinosaur, obstacle.obstaclesLine[0], ctx);
+
         startTime = time;
         window.requestAnimationFrame(draw);
     }());
@@ -90,7 +93,7 @@ window.onload = () => {
 
     function onKeyDown(e) {
         if (keyCode.JUMP.includes(e.keyCode)) {
-            if(!dinosaur.isJump) {
+            if (!dinosaur.isJump) {
                 dinosaur.startJump();
             }
         } else if (keyCode.DUCK.includes(e.keyCode)) {

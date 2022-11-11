@@ -1,3 +1,5 @@
+import { CollisionBox } from './collision-box.js';
+
 const dinosaurConfig = {
     BLINK_TIME: 3000,
     WIDTH: 44,
@@ -10,6 +12,20 @@ const dinosaurConfig = {
     DROP_SPEED: -5,
     DROP_DOWN_SPEED: 3,
     GRAVITY: 0.6,
+};
+
+const dinosaurCollisionBoxs = {
+    DUCK: [
+        new CollisionBox(1, 18, 110, 25),
+    ],
+    RUN: [
+        new CollisionBox(10, 0, 40, 16),
+        new CollisionBox(1, 18, 65, 9),
+        new CollisionBox(9, 35, 14, 8),
+        new CollisionBox(1, 24, 55, 5),
+        new CollisionBox(2, 30, 40, 4),
+        new CollisionBox(4, 34, 30, 4),
+    ],
 };
 
 const dinosaurStatus = {
@@ -61,6 +77,7 @@ export class Dinosaur {
     isDrop
     jumpCount
     speedDown
+    collisionBoxes
 
     constructor(canvas, spritePos, containerHeight) {
         this.canvas = canvas;
@@ -78,6 +95,7 @@ export class Dinosaur {
         this.time = 0;
         this.currentFramesRate = 1000 / FPS;
         this.config = dinosaurConfig;
+        this.collisionBoxes = dinosaurCollisionBoxs;
         this.jumpSpeed = 0;
 
         this.status = dinosaurStatus.WAIT;

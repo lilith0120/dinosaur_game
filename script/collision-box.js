@@ -35,7 +35,7 @@ export function checkCollision(dinosaur, obstacle, ctx) {
                 }
 
                 if (checkHit(adjDinosaurBox, adjObstacleBox)) {
-                    return [adjDinosaurBox, adjObstacleBox];
+                    return true;
                 }
             }
         }

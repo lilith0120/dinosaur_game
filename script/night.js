@@ -152,4 +152,16 @@ export class Night {
         this.ctx.globalAlpha = 1;
         this.ctx.restore();
     }
+
+    reset() {
+        this.curPhase = 0;
+        this.opacity = 0;
+        this.stars = [];
+        this.drawStars = false;
+        this.invertTime = 0;
+        this.invertTrigger = false;
+        this.inverted = document.body.classList.toggle('inverted', this.invertTrigger);
+
+        this.placeStars();
+    }
 }

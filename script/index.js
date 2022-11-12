@@ -4,6 +4,7 @@ import { Night } from './night.js';
 import { Obstacle } from './obstacle.js';
 import { Dinosaur } from './dinosaur.js';
 import { checkCollision } from './collision-box.js';
+import { Distance } from './distance.js';
 
 // 地面初始坐标
 const spriteDefinition = {
@@ -25,6 +26,10 @@ const spriteDefinition = {
     },
     DINOSAUR: {
         x: 848,
+        y: 2,
+    },
+    DISTANCE: {
+        x: 655,
         y: 2,
     },
 };
@@ -56,34 +61,46 @@ window.onload = () => {
     let night = new Night(canvas, spriteDefinition.NIGHT, Dimensions.WIDTH);
     let obstacle = new Obstacle(canvas, spriteDefinition.OBSTACLE, Dimensions.WIDTH, 0.5, 1, 0, undefined);
     let dinosaur = new Dinosaur(canvas, spriteDefinition.DINOSAUR, Dimensions.HEIGHT);
+    let distance = new Distance(canvas, spriteDefinition.DISTANCE, Dimensions.WIDTH);
 
     let startTime = 0;
     let gameScore = 0;
+    let highScore = 0;
     let speed = 2.5;
+    let isPlay = false;
+    let isGameOver = true;
+    let req = null;
 
-    (function draw(time = 0) {
+    function draw(time = 0) {
         let deltaTime = time - startTime;
-        gameScore++;
-        if (speed < 13 && !(gameScore % 1000)) {
-            speed += 0.5;
-        }
-
-        ctx.clearRect(0, 0, canvasDefinition.WIDTH, canvasDefinition.HEIGHT);
-        horizon.update(deltaTime, speed);
-        cloud.updateCloud(0.2);
-        night.invert(deltaTime, gameScore);
-        obstacle.updateObstacle(deltaTime, speed);
-        dinosaur.update(deltaTime);
-
-        if (dinosaur.isJump) {
-            dinosaur.updateJump(deltaTime);
-        }
-
-        checkCollision(dinosaur, obstacle.obstaclesLine[0], ctx);
-
         startTime = time;
-        window.requestAnimationFrame(draw);
-    }());
+
+        if (isPlay) {
+            ctx.clearRect(0, 0, canvasDefinition.WIDTH, canvasDefinition.HEIGHT);
+            gameScore++;
+            if (speed < 13 && !(gameScore % 1000)) {
+                speed += 0.5;
+            }
+
+            horizon.update(deltaTime, speed);
+            cloud.updateCloud(0.2);
+            night.invert(deltaTime, gameScore);
+            obstacle.updateObstacle(deltaTime, speed);
+            distance.update(deltaTime, gameScore);
+
+            if (dinosaur.isJump) {
+                dinosaur.updateJump(deltaTime);
+            }
+
+            if (checkCollision(dinosaur, obstacle.obstaclesLine[0])) {
+                gameOver();
+            }
+
+        }
+
+        dinosaur.update(deltaTime);
+        req = window.requestAnimationFrame(draw);
+    };
 
     document.addEventListener("keydown", onKeyDown);
     document.addEventListener("mousedown", onKeyDown);
@@ -93,6 +110,14 @@ window.onload = () => {
 
     function onKeyDown(e) {
         if (keyCode.JUMP.includes(e.keyCode)) {
+            if (isGameOver) {
+                startGame();
+            }
+
+            if (!isPlay) {
+                isPlay = true;
+            }
+
             if (!dinosaur.isJump) {
                 dinosaur.startJump();
             }
@@ -112,5 +137,36 @@ window.onload = () => {
             dinosaur.speedDown = false;
             dinosaur.setDuck(false);
         }
+    }
+
+    function gameOver() {
+        cancelAnimationFrame(req);
+        req = null;
+        if (gameScore > highScore) {
+            highScore = gameScore;
+            distance.setHighScore(highScore);
+        }
+
+        distance.isFlash = false;
+        dinosaur.update(0, "HIT");
+
+        startTime = 0;
+        gameScore = 0;
+        speed = 2.5;
+        isPlay = false;
+        isGameOver = true;
+    }
+
+    function startGame() {
+        isGameOver = false;
+
+        horizon.reset();
+        night.reset();
+        obstacle.reset();
+        dinosaur.reset();
+        distance.reset();
+
+        ctx.clearRect(0, 0, canvasDefinition.WIDTH, canvasDefinition.HEIGHT);
+        draw();
     }
 };

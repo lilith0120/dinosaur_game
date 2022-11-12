@@ -219,6 +219,7 @@ export class Obstacle {
         let obstacleSpritePos = spriteDefinition[curType.type];
         let newObstacle = new Obstacle(this.canvas, obstacleSpritePos, this.containerWidth, this.gapDistance, speed, curType.width, curType);
         obstaclesLine.push(newObstacle);
+        this.obstaclesLine = obstaclesLine;
         obstaclesType.push(curType.type);
 
         if (obstaclesType.length > MAX_OBSTACLE_REPEAT) {
@@ -245,5 +246,9 @@ export class Obstacle {
             let box = new CollisionBox(boxs[i].xPos, boxs[i].yPos, boxs[i].width, boxs[i].height);
             this.collisionBoxes.push(box);
         }
+    }
+
+    reset() {
+        obstaclesLine = [];
     }
 }

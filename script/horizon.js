@@ -89,4 +89,8 @@ export class HorizonLine {
         }
         this.draw();
     }
+
+    reset() {
+        this.setSourceDimesions();
+    }
 }

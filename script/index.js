@@ -164,6 +164,7 @@ window.onload = () => {
         isPlay = true;
         playCnt += 1;
 
+        horizon.reset();
         night.reset();
         obstacle.reset();
         dinosaur.reset();

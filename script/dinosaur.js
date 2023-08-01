@@ -1,7 +1,7 @@
 import { CollisionBox } from './collision-box.js';
 
 const dinosaurConfig = {
-    BLINK_TIME: 3000,
+    BLINK_TIME: 1000,
     WIDTH: 44,
     DUCK_WIDTH: 59,
     HEIGHT: 47,
@@ -98,7 +98,7 @@ export class Dinosaur {
         this.collisionBoxes = dinosaurCollisionBoxs;
         this.jumpSpeed = 0;
 
-        this.status = dinosaurStatus.WAIT;
+        this.status = "WAIT";
         this.isJump = false;
         this.isDuck = false;
         this.reachMinJumpHeight = false;
@@ -122,10 +122,9 @@ export class Dinosaur {
         let sourceX = x + this.spritePos.x;
         let sourceY = y + this.spritePos.y;
 
-        let sourceWidth = this.isDuck && this.status !== dinosaurStatus.HIT ?
+        let sourceWidth = this.isDuck && this.status !== "HIT" ?
             dinosaurConfig.DUCK_WIDTH : dinosaurConfig.WIDTH;
         let sourceHeight = dinosaurConfig.HEIGHT;
-
 
         this.ctx.drawImage(document.getElementById("image"),
             sourceX, sourceY,
@@ -158,7 +157,7 @@ export class Dinosaur {
         if (this.status === "WAIT") {
             this.blink(this.getTimeStamp());
         } else {
-            this.draw(this.animationFrames[this.currentAniFrames], 0);
+            this.draw(this.animationFrames[this.currentAniFrames] ?? this.animationFrames[0], 0);
         }
     };
 
@@ -226,6 +225,7 @@ export class Dinosaur {
 
     reset() {
         this.isJump = false;
+        this.isDuck = false;
         this.yPos = this.groundYPos;
         this.jumpSpeed = 0;
         this.update(0, "RUN");

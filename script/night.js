@@ -15,7 +15,7 @@ const starDefinition = {
 };
 
 const MoonPhase = [140, 120, 100, 60, 40, 20, 0];
-const INVERT_DURATION = 7000;
+const INVERT_DURATION = 10000;
 
 export class Night {
     canvas
@@ -73,7 +73,7 @@ export class Night {
         } else if (this.invertTime) {
             this.invertTime += deltaTime;
         } else {
-            this.invertTrigger = !(gameScore % 1000);
+            this.invertTrigger = !(gameScore % 2500);
             if (this.invertTrigger && this.invertTime === 0) {
                 this.invertTime += deltaTime;
                 this.inverted = document.body.classList.toggle('inverted', this.invertTrigger);

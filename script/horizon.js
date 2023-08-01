@@ -19,7 +19,6 @@ export class HorizonLine {
         this.dimensions = dimensions;
         this.xPos = [];
         this.yPos = 0;
-        this.sourceXPos = [this.spritePos.x, this.spritePos.x + this.dimensions.WIDTH];
         this.bumpThreshold = 0.5;
 
         this.setSourceDimesions();
@@ -28,6 +27,7 @@ export class HorizonLine {
 
     // 设置地面资源位置
     setSourceDimesions() {
+        this.sourceXPos = [this.spritePos.x, this.spritePos.x + this.dimensions.WIDTH];
         this.xPos = [0, this.dimensions.WIDTH];
         this.yPos = this.dimensions.YPOS;
     }
@@ -61,6 +61,11 @@ export class HorizonLine {
         this.xPos[line1] -= increment;
         this.xPos[line2] = this.xPos[line1] + this.dimensions.WIDTH;
 
+        // console.log('increment', increment)
+        // console.log(-this.dimensions.WIDTH)
+        // console.log("xPos", this.xPos)
+        // console.log(line1)
+
         // 如果第一块地板完全离开画布，就拉回右侧准备
         // 第二块地板进入画布
         if (this.xPos[line1] <= -this.dimensions.WIDTH) {
@@ -83,9 +88,5 @@ export class HorizonLine {
             this.updateXpos(1, increment);
         }
         this.draw();
-    }
-
-    reset() {
-        this.xPos = [0, this.dimensions.WIDTH];
     }
 }

@@ -42,14 +42,14 @@ const Dimensions = {
 
 // 画板大小
 const canvasDefinition = {
-    WIDTH: 1200,
+    WIDTH: 800,
     HEIGHT: 200,
 };
 
 const keyCode = {
     JUMP: [32, 38],
     DUCK: [40],
-    RESTART: [13],
+    RESTART: [82],
 };
 
 window.onload = () => {
@@ -70,6 +70,7 @@ window.onload = () => {
     let isPlay = false;
     let isGameOver = true;
     let req = null;
+    let playCnt = 0;
 
     function draw(time = 0) {
         let deltaTime = time - startTime;
@@ -95,12 +96,12 @@ window.onload = () => {
             if (checkCollision(dinosaur, obstacle.obstaclesLine[0])) {
                 gameOver();
             }
-
         }
 
         dinosaur.update(deltaTime);
         req = window.requestAnimationFrame(draw);
     };
+    draw();
 
     document.addEventListener("keydown", onKeyDown);
     document.addEventListener("mousedown", onKeyDown);
@@ -109,15 +110,16 @@ window.onload = () => {
     document.addEventListener("mouseup", onKeyUp);
 
     function onKeyDown(e) {
-        if (keyCode.JUMP.includes(e.keyCode)) {
+        if ((keyCode.RESTART.includes(e.keyCode) && playCnt > 0) ||
+        (keyCode.JUMP.includes(e.keyCode) && playCnt === 0)) {
             if (isGameOver) {
                 startGame();
             }
+        }
 
-            if (!isPlay) {
-                isPlay = true;
-            }
+        if (isGameOver) return;
 
+        if (keyCode.JUMP.includes(e.keyCode)) {
             if (!dinosaur.isJump) {
                 dinosaur.startJump();
             }
@@ -159,14 +161,15 @@ window.onload = () => {
 
     function startGame() {
         isGameOver = false;
+        isPlay = true;
+        playCnt += 1;
 
-        horizon.reset();
         night.reset();
         obstacle.reset();
         dinosaur.reset();
         distance.reset();
 
-        ctx.clearRect(0, 0, canvasDefinition.WIDTH, canvasDefinition.HEIGHT);
+        startTime = 0;
         draw();
     }
 };
